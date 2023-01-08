@@ -8,7 +8,7 @@ async function bootstrap() {
 
   app.setGlobalPrefix("api");
   setupSwagger(app);
-  await app.listen(80);
+  await app.listen(3000);
 }
 
 bootstrap();
