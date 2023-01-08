@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  dashr-api:
+    build: 
+      context: .
+      dockerfile: ./Dockerfile
+    depends_on:
+      - postgres
+    restart: always
+    volumes:
+      - .:/brand-meal
+      - /brand-meal/node_modules
+    ports:
+      - 3000:3000
+      - 80:80
+
+    environment:
+      - DB_URI=postgres://postgres:postgres@postgres:5432/postgres
+      - PORT=80
+
+
+  postgres:
+    image: postgres:10.4
+    environment: 
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - 5432:5432
+
+
+
+
+    
+ 
