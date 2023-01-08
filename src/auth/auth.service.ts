@@ -21,7 +21,6 @@ export class AuthService {
       .where({ email: dto.email })
       .returning("*")
       .first();
-    console.log(user);
     //if user throw exception
     if (user) throw new ForbiddenException("User with email already exists");
     //if user, hash passwrd
@@ -39,7 +38,6 @@ export class AuthService {
       .where({ email: dto.email })
       .returning("*")
       .first();
-    console.log(user);
     if (!user) throw new ForbiddenException("Credentials Incorrect");
     const pwMatch: boolean = await bcrypt.compare(dto.password, user.password);
     if (!pwMatch) throw new ForbiddenException("Credentials Incorrect");
