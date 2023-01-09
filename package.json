@@ -4,7 +4,7 @@
   "description": "Companion repo for the article",
   "license": "MIT",
   "scripts": {
-    "build": "nest build",
+    "build": "tsc -p tsconfig.build.json",
     "start": "ts-node src/main",
     "prestart:prod": "npm run build",
     "start:dev": "nest start --watch",
