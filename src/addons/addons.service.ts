@@ -20,14 +20,7 @@ export class AddonsService {
     brandId: number,
     props: Partial<AddonModel>
   ) {
-    const addon = await this.modelClass
-      .query()
-      .patch(props)
-      .where({ id: addonId })
-      .where({ brandId: brandId })
-      .first()
-      .returning("*");
-    if (!addon) throw new NotFoundException("this addon does not exist");
+    await this.findOne(brandId, addonId);
     return this.modelClass
       .query()
       .patch(props)
@@ -45,22 +38,12 @@ export class AddonsService {
       .first()
       .returning("*");
     if (!addon) throw new NotFoundException("this addon does not exist");
-    return this.modelClass
-      .query()
-      .where({ brandId: brandId })
-      .where({ id: addonId })
-      .first()
-      .returning("*");
+    return addon;
   }
 
   async delete(brandId: number, addonId: number) {
-    const addon = await this.modelClass
-      .query()
-      .where({ id: addonId })
-      .where({ brandId: brandId })
-      .first()
-      .returning("*");
-    if (!addon) throw new NotFoundException("this addon does not exist");
+    await this.findOne(brandId, addonId);
+
     return this.modelClass
       .query()
       .delete()

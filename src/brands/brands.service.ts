@@ -23,7 +23,7 @@ export class BrandsService {
   }
 
   create(props: Partial<BrandModel>, user: UserModel) {
-    if (user.role == "admin")
+    if (user.role !== "admin")
       throw new UnauthorizedException(
         "Only admins are permitted to create brands"
       );
@@ -31,16 +31,11 @@ export class BrandsService {
   }
 
   async update(id: number, props: Partial<BrandModel>, user: UserModel) {
-    if (user.role == "admin")
+    if (user.role !== "admin")
       throw new UnauthorizedException(
         "Only admins are permitted to update brands"
       );
-    const brand = await this.modelClass
-      .query()
-      .patch(props)
-      .where({ id })
-      .returning("*")
-      .first();
+    const brand = await this.modelClass.query().findById(id);
     if (!brand) throw new NotFoundError("this brand does not exist");
     return this.modelClass
       .query()
@@ -51,15 +46,11 @@ export class BrandsService {
   }
 
   async delete(id: number, user: UserModel) {
-    if (user.role == "admin")
+    if (user.role !== "admin")
       throw new UnauthorizedException(
         "Only admins are permitted to delete brands"
       );
-    const brand = await this.modelClass
-      .query()
-      .where({ id })
-      .returning("*")
-      .first();
+    const brand = await this.modelClass.query().findById(id);
     if (!brand) throw new NotFoundError("this brand does not exist");
     return transaction(this.modelClass, async (_, trx) => {
       await this.brandAddonService.deleteByBrandId(id).transacting(trx);
@@ -75,15 +66,11 @@ export class BrandsService {
   }
 
   async addAddon(id: number, props: Partial<AddonModel>, user: UserModel) {
-    if (user.role == "admin")
+    if (user.role !== "admin")
       throw new UnauthorizedException(
         "Only admins are permitted to create addons"
       );
-    const brand = await this.modelClass
-      .query()
-      .where({ id })
-      .returning("*")
-      .first();
+    const brand = await this.modelClass.query().findById(id);
     if (!brand) throw new NotFoundError("this brand does not exist");
     const addon = await this.addonService.create({ brandId: id, ...props });
     await this.brandAddonService.create({ addonId: addon.id, brandId: id });
@@ -106,7 +93,7 @@ export class BrandsService {
   }
 
   async removeAddon(addonId: number, brandId: number, user: UserModel) {
-    if (user.role == "admin")
+    if (user.role !== "admin")
       throw new UnauthorizedException(
         "Only admins are permitted to remove addons"
       );
@@ -115,7 +102,7 @@ export class BrandsService {
   }
 
   async addCategory(brandId: number, category: string, user: UserModel) {
-    if (user.role == "admin")
+    if (user.role !== "admin")
       throw new UnauthorizedException(
         "Only admins are permitted to remove addons"
       );

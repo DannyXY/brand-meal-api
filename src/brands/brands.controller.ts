@@ -37,9 +37,13 @@ export class BrandsController {
   @ApiTags("Brand")
   async findOne(@Param("id", new ParseIntPipe()) id: number) {
     try {
-      const note = await this.brandsService.findOne(id);
-      await note.$loadRelated("[addons]");
-      return note;
+      const brand = await this.brandsService.findOne(id);
+      if (brand) {
+        await brand.$loadRelated("[addons]");
+        return brand;
+      }
+
+      return "brand does not exist";
     } catch (error) {
       throw error;
     }
@@ -49,6 +53,7 @@ export class BrandsController {
   @ApiTags("Brand")
   async create(@Body() props: BrandDto, @GetUser() user: UserModel) {
     try {
+      console.log(user);
       return this.brandsService.create(props, user);
     } catch (error) {
       throw error;

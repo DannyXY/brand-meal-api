@@ -1,5 +1,5 @@
 import { Injectable, ForbiddenException, Inject } from "@nestjs/common";
-import { AuthDto } from "./dto/auth.dto";
+import { AuthDto, SigninDto } from "./dto/auth.dto";
 import * as bcrypt from "bcrypt";
 import { JwtService } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
@@ -32,7 +32,7 @@ export class AuthService {
       .insert({ email: dto.email, password: hashedPassword, role: dto.role });
   }
 
-  async signin(dto: AuthDto): Promise<any> {
+  async signin(dto: SigninDto): Promise<any> {
     const user = await this.modelClass
       .query()
       .where({ email: dto.email })
